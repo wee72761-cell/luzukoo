@@ -1,0 +1,2875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luzuko Dlamini | Creative Developer</title>
+  <meta name="description" content="Personal portfolio of Luzuko Dlamini, a Johannesburg-based creative developer and designer featuring selected work, digital apps, and social links." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            accent: '#F27D26',
+            'bg-main': '#0c0c0c',
+            'bg-card': '#121212',
+          },
+          fontFamily: {
+            display: ['Anton', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0c0c0c;
+      color: #ffffff;
+      background-image:
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(255,255,255,0.02) 0%,
+          transparent 50%
+        );
+    }
+
+    .hero-bg-grid {
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,0.025) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,0.025) 1px,
+          transparent 1px
+        );
+      background-size: 60px 60px;
+    }
+
+    .stroke-text {
+      -webkit-text-stroke: 2px rgba(255,255,255,0.15);
+      color: transparent;
+    }
+
+    .link-card {
+      transition: all 0.3s ease;
+    }
+
+    .link-card:hover {
+      transform: translateX(8px);
+    }
+
+    .link-card[data-social="facebook"]:hover {
+      border-color: #1877F2;
+      background: rgba(24,119,242,0.05);
+    }
+
+    .link-card[data-social="github"]:hover {
+      border-color: #ffffff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .link-card[data-social="linkedin"]:hover {
+      border-color: #0A66C2;
+      background: rgba(10,102,194,0.05);
+    }
+
+    .link-card[data-social="instagram"]:hover {
+      border-color: #E4405F;
+      background: rgba(228,64,95,0.05);
+    }
+
+    .link-card[data-social="email"]:hover {
+      border-color: #F27D26;
+      background: rgba(242,125,38,0.05);
+    }
+
+    .admin-controls {
+      display: none;
+    }
+
+    body.is-admin .admin-controls {
+      display: flex;
+    }
+
+    .clean-modal {
+      background-color: rgba(12,12,12,0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    #adminTools {
+      display: none;
+    }
+
+    body.is-admin #adminTools {
+      display: flex;
+    }
+
+    #galleryThumbnails img {
+      user-select: none;
+    }
+
+    @media (max-width: 640px) {
+      #adminTools {
+        left: 1rem;
+        right: 1rem;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-[#F27D26] selection:text-black">
+
+  <!-- =====================================================
+       ADMIN PASSWORD MODAL
+       ===================================================== -->
+
+  <div
+    id="adminModal"
+    class="clean-modal fixed inset-0 z-[200] hidden flex-col items-center justify-center p-4"
+  >
+    <div class="bg-[#121212] border border-white/10 rounded-3xl p-8 max-w-md w-full">
+
+      <h3 class="font-display text-2xl uppercase tracking-wider mb-4 text-center">
+        Admin Access
+      </h3>
+
+      <input
+        type="password"
+        id="adminPassword"
+        placeholder="Enter password"
+        class="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-accent transition-colors mb-4"
+      />
+
+      <div class="flex gap-3">
+
+        <button
+          onclick="closeAdminModal()"
+          class="flex-1 px-4 py-3 border border-white/10 rounded-xl text-white/60 hover:text-white hover:border-white/30 transition-all text-sm font-semibold uppercase tracking-wider"
+        >
+          Cancel
+        </button>
+
+        <button
+          onclick="checkAdminPassword()"
+          class="flex-1 px-4 py-3 bg-accent text-black rounded-xl font-bold uppercase tracking-wider hover:bg-white transition-all"
+        >
+          Unlock
+        </button>
+
+      </div>
+
+      <p
+        id="adminError"
+        class="text-red-400 text-xs mt-3 text-center hidden"
+      >
+        Incorrect password.
+      </p>
+
+      <p class="text-white/30 text-[9px] uppercase tracking-widest text-center mt-4">
+        Admin tools include backup / restore
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       CV MODAL
+       ===================================================== -->
+
+  <div
+    id="cvModal"
+    class="clean-modal fixed inset-0 z-[200] hidden overflow-y-auto"
+  >
+
+    <div class="min-h-screen px-6 md:px-12 py-12">
+
+      <div class="max-w-4xl mx-auto relative">
+
+        <button
+          onclick="closeCvModal()"
+          class="absolute top-0 right-0 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <h2 class="font-display text-5xl md:text-6xl uppercase mb-12 text-center mt-8">
+          Curriculum Vitae
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+
+          <!-- Technical Skills -->
+
+          <div class="p-6 border border-white/10 rounded-2xl bg-[#121212]">
+
+            <h3 class="font-display text-2xl uppercase mb-6 flex items-center gap-3">
+              <i data-lucide="code" class="w-6 h-6 text-accent"></i>
+              Technical Skills
+            </h3>
+
+            <div class="space-y-3 text-sm">
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>Python</span>
+                <span class="text-white/60">Working Knowledge</span>
+              </div>
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>Rust</span>
+                <span class="text-emerald-400">Proficient</span>
+              </div>
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>C++ / Arduino</span>
+                <span class="text-white/60">Basic</span>
+              </div>
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>Electronics & Hardware</span>
+                <span class="text-white/60">Intermediate</span>
+              </div>
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>Web Development</span>
+                <span class="text-white/60">Intermediate</span>
+              </div>
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>3D Visualization</span>
+                <span class="text-white/60">Good</span>
+              </div>
+
+              <div class="flex justify-between p-3 bg-black/40 rounded-xl border border-white/5">
+                <span>AI-Assisted Development</span>
+                <span class="text-white/60">Working Knowledge</span>
+              </div>
+
+            </div>
+          </div>
+
+
+          <!-- Build Focus -->
+
+          <div class="space-y-8">
+
+            <div class="p-6 border border-white/10 rounded-2xl bg-[#121212]">
+
+              <h3 class="font-display text-2xl uppercase mb-6 flex items-center gap-3">
+                <i data-lucide="target" class="w-6 h-6 text-accent"></i>
+                Build Focus
+              </h3>
+
+              <div class="space-y-4 text-sm">
+
+                <div class="border-l-2 border-accent/50 pl-4">
+                  <h4 class="font-bold uppercase tracking-wider mb-1">
+                    Rapid Prototyping
+                  </h4>
+
+                  <p class="text-white/60">
+                    Quick iteration from concept to working prototype
+                  </p>
+                </div>
+
+                <div class="border-l-2 border-accent/50 pl-4">
+                  <h4 class="font-bold uppercase tracking-wider mb-1">
+                    Hardware / Software Integration
+                  </h4>
+
+                  <p class="text-white/60">
+                    Bridging physical and digital systems
+                  </p>
+                </div>
+
+                <div class="border-l-2 border-accent/50 pl-4">
+                  <h4 class="font-bold uppercase tracking-wider mb-1">
+                    Practical Problem Solving
+                  </h4>
+
+                  <p class="text-white/60">
+                    Real-world solutions that actually work
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- Projects -->
+
+            <div class="p-6 border border-white/10 rounded-2xl bg-[#121212]">
+
+              <h3 class="font-display text-2xl uppercase mb-6 flex items-center gap-3">
+                <i data-lucide="briefcase" class="w-6 h-6 text-accent"></i>
+                Projects
+              </h3>
+
+              <div class="space-y-4 text-sm">
+
+                <div class="border-l-2 border-white/10 pl-4">
+                  <h4 class="font-bold uppercase tracking-wider mb-1">
+                    Electronics & Hardware
+                  </h4>
+
+                  <p class="text-white/60">
+                    Built Arduino prototypes combining programming and electronics.
+                  </p>
+                </div>
+
+                <div class="border-l-2 border-white/10 pl-4">
+                  <h4 class="font-bold uppercase tracking-wider mb-1">
+                    Web Development
+                  </h4>
+
+                  <p class="text-white/60">
+                    Designed web applications and used AI-assisted development for rapid prototyping.
+                  </p>
+                </div>
+
+                <div class="border-l-2 border-white/10 pl-4">
+                  <h4 class="font-bold uppercase tracking-wider mb-1">
+                    3D Visualization
+                  </h4>
+
+                  <p class="text-white/60">
+                    Created 3D models and visualizations for technical and product concepts.
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Education / Contact -->
+
+        <div class="grid md:grid-cols-2 gap-8 mt-8">
+
+          <div class="p-6 border border-white/10 rounded-2xl bg-[#121212]">
+
+            <h3 class="font-display text-xl uppercase mb-4 flex items-center gap-3">
+              <i data-lucide="graduation-cap" class="w-5 h-5 text-accent"></i>
+              Education
+            </h3>
+
+            <h4 class="font-bold text-lg">
+              Reggie Masuku Secondary School
+            </h4>
+
+            <p class="text-white/60 text-sm">
+              Secondary School
+            </p>
+
+          </div>
+
+
+          <div class="p-6 border border-white/10 rounded-2xl bg-[#121212]">
+
+            <h3 class="font-display text-xl uppercase mb-4 flex items-center gap-3">
+              <i data-lucide="contact" class="w-5 h-5 text-accent"></i>
+              Contact
+            </h3>
+
+            <div class="space-y-2 text-sm text-white/80">
+
+              <p>
+                Phone: 0640637590
+              </p>
+
+              <p>
+                Email: luzukodlamini12@gmail.com
+              </p>
+
+              <p>
+                Location: Roodepoort, Gauteng
+                <br>
+                <span class="text-white/50 text-xs">
+                  Mountain View North, Wilgeheuwel
+                </span>
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       GALLERY MODAL
+       ===================================================== -->
+
+  <div
+    id="galleryModal"
+    class="clean-modal fixed inset-0 z-[200] hidden flex-col items-center justify-center p-4 md:p-12"
+  >
+
+    <button
+      onclick="closeGallery()"
+      class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors z-10"
+    >
+      <i data-lucide="x" class="w-8 h-8"></i>
+    </button>
+
+    <div class="w-full max-w-6xl h-full flex flex-col md:flex-row gap-8">
+
+      <div
+        class="flex-1 flex items-center justify-center bg-[#121212] border border-white/10 rounded-3xl overflow-hidden relative min-h-[300px]"
+      >
+
+        <button
+          onclick="galleryPrevious()"
+          class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-black/60 border border-white/10 flex items-center justify-center hover:bg-accent hover:text-black transition-all"
+        >
+          <i data-lucide="chevron-left"></i>
+        </button>
+
+        <img
+          id="galleryMainImage"
+          src=""
+          alt="Project Detail"
+          class="max-w-full max-h-full object-contain"
+        />
+
+        <button
+          onclick="galleryNext()"
+          class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-black/60 border border-white/10 flex items-center justify-center hover:bg-accent hover:text-black transition-all"
+        >
+          <i data-lucide="chevron-right"></i>
+        </button>
+
+      </div>
+
+
+      <div class="w-full md:w-64 flex flex-col gap-4">
+
+        <h3
+          id="galleryTitle"
+          class="font-display text-2xl uppercase tracking-wider"
+        >
+          Project Angles
+        </h3>
+
+        <div
+          id="galleryThumbnails"
+          class="grid grid-cols-2 gap-3 overflow-y-auto custom-scroll flex-1 max-h-[50vh] pr-2"
+        ></div>
+
+
+        <!-- ADMIN UPLOAD -->
+
+        <div class="admin-controls mt-4 flex-col">
+
+          <label
+            class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-white/20 rounded-2xl hover:border-accent hover:bg-accent/5 transition-all cursor-pointer"
+          >
+
+            <i
+              data-lucide="upload-cloud"
+              class="w-6 h-6 text-white/50 mb-1"
+            ></i>
+
+            <span class="text-[10px] font-bold tracking-widest uppercase text-white/50">
+              Add Images
+            </span>
+
+            <input
+              type="file"
+              id="galleryUploadInput"
+              class="hidden"
+              accept="image/*"
+              multiple
+            />
+
+          </label>
+
+
+          <button
+            onclick="clearGallery()"
+            class="w-full mt-2 py-2 text-[10px] font-bold tracking-widest uppercase text-red-400 hover:text-red-300 border border-red-500/20 rounded-xl hover:bg-red-500/10 transition-all"
+          >
+            Clear All
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header
+    class="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/10"
+  >
+
+    <a
+      href="#"
+      class="font-display text-2xl tracking-widest hover:text-accent transition-colors"
+    >
+      LD<span class="text-accent">.</span>
+    </a>
+
+
+    <nav
+      class="flex gap-6 md:gap-10 text-xs font-semibold tracking-widest uppercase items-center"
+    >
+
+      <a href="#work" class="hover:text-accent transition-colors hidden md:block">
+        Work
+      </a>
+
+      <a href="#about" class="hover:text-accent transition-colors hidden md:block">
+        About
+      </a>
+
+      <a href="#apps" class="hover:text-accent transition-colors hidden md:block">
+        Apps
+      </a>
+
+      <a href="#links" class="hover:text-accent transition-colors hidden md:block">
+        Links
+      </a>
+
+      <button
+        onclick="openAdminModal()"
+        class="text-[10px] font-semibold tracking-widest uppercase text-white/30 hover:text-accent transition-colors border border-white/10 px-3 py-1.5 rounded-full"
+      >
+        Admin
+      </button>
+
+    </nav>
+
+  </header>
+
+
+  <!-- =====================================================
+       HERO
+       ===================================================== -->
+
+  <section
+    class="min-h-screen flex flex-col justify-center px-6 md:px-12 pt-32 relative overflow-hidden"
+  >
+
+    <div class="hero-bg-grid absolute inset-0 pointer-events-none"></div>
+
+    <div class="flex items-center gap-4 mb-6">
+
+      <div class="h-px w-12 bg-accent"></div>
+
+      <span class="uppercase tracking-[3px] text-sm text-accent">
+        JOHANNESBURG, SOUTH AFRICA
+      </span>
+
+    </div>
+
+
+    <h1
+      class="font-display text-[clamp(80px,18vw,240px)] leading-[0.8] tracking-[-4px] uppercase"
+    >
+      LUZUKO
+    </h1>
+
+    <h1
+      class="font-display text-[clamp(80px,18vw,240px)] leading-[0.8] tracking-[-4px] uppercase stroke-text"
+    >
+      DLAMINI
+    </h1>
+
+
+    <p class="max-w-lg mt-10 text-lg text-white/70">
+      From the streets of Joburg • Building digital applications & interactive products with South African energy.
+    </p>
+
+
+    <div class="mt-12 flex flex-wrap gap-4">
+
+      <a
+        href="#apps"
+        class="px-10 py-5 bg-white text-black font-bold rounded-full hover:bg-accent hover:text-black transition-all flex items-center gap-3 text-sm tracking-widest"
+      >
+        EXPLORE APPS
+        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      </a>
+
+
+      <button
+        onclick="openCvModal()"
+        class="px-10 py-5 border border-white/30 rounded-full hover:border-accent hover:text-accent transition-all text-sm tracking-widest"
+      >
+        CV / RESUME
+      </button>
+
+
+      <a
+        href="#links"
+        class="px-10 py-5 border border-white/30 rounded-full hover:border-accent transition-all text-sm tracking-widest"
+      >
+        LET'S CONNECT
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       WORK
+       ===================================================== -->
+
+  <section
+    id="work"
+    class="px-6 md:px-12 py-24 border-t border-white/10"
+  >
+
+    <div class="flex justify-between items-end mb-16">
+
+      <div>
+
+        <span class="text-accent text-sm tracking-widest uppercase">
+          SELECTED WORK
+        </span>
+
+        <h2 class="font-display text-5xl md:text-7xl tracking-tight mt-2">
+          The Work
+        </h2>
+
+      </div>
+
+
+      <div class="flex items-center gap-4">
+
+        <button
+          onclick="addNewProject()"
+          class="admin-controls px-4 py-2 bg-accent/20 border border-accent text-accent rounded-full text-xs font-bold uppercase tracking-widest hover:bg-accent hover:text-black transition-all"
+        >
+          <i data-lucide="plus" class="w-3 h-3 inline mr-1"></i>
+          Add
+        </button>
+
+        <span class="opacity-40 text-sm">
+          00 PROJECTS
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="grid md:grid-cols-2 gap-12"
+      id="workGrid"
+    ></div>
+
+  </section>
+
+
+  <!-- =====================================================
+       ABOUT
+       ===================================================== -->
+
+  <section
+    id="about"
+    class="px-6 md:px-12 py-24 bg-[#121212] border-y border-white/10"
+  >
+
+    <div class="max-w-4xl mx-auto">
+
+      <span class="text-[10px] font-semibold tracking-[0.3em] uppercase text-accent block mb-5">
+        The Philosophy
+      </span>
+
+
+      <h2
+        class="font-display text-4xl md:text-7xl uppercase leading-none mb-16"
+      >
+        Design is not just what it looks like.
+        <br>
+        <span class="stroke-text">
+          Design is how it works.
+        </span>
+      </h2>
+
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="p-6 border border-white/10 rounded-2xl bg-black/40">
+
+          <i data-lucide="code" class="w-8 h-8 text-accent mb-4"></i>
+
+          <h4 class="font-bold text-xs uppercase tracking-widest mb-2">
+            Development
+          </h4>
+
+          <p class="text-white/60 text-xs leading-relaxed">
+            Clean, scalable code built with modern performance standards.
+          </p>
+
+        </div>
+
+
+        <div class="p-6 border border-white/10 rounded-2xl bg-black/40">
+
+          <i data-lucide="palette" class="w-8 h-8 text-accent mb-4"></i>
+
+          <h4 class="font-bold text-xs uppercase tracking-widest mb-2">
+            Design
+          </h4>
+
+          <p class="text-white/60 text-xs leading-relaxed">
+            Minimalist visual languages that prioritize clarity, hierarchy, and emotional impact.
+          </p>
+
+        </div>
+
+
+        <div class="p-6 border border-white/10 rounded-2xl bg-black/40">
+
+          <i data-lucide="layers" class="w-8 h-8 text-accent mb-4"></i>
+
+          <h4 class="font-bold text-xs uppercase tracking-widest mb-2">
+            Motion
+          </h4>
+
+          <p class="text-white/60 text-xs leading-relaxed">
+            Fluid interactions and animations that bring digital interfaces to life.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       APPS
+       ===================================================== -->
+
+  <section
+    id="apps"
+    class="px-6 md:px-12 py-24 border-b border-white/10 bg-black"
+  >
+
+    <div class="max-w-7xl mx-auto">
+
+      <div class="mb-12">
+
+        <span
+          class="text-[11px] font-bold tracking-[0.3em] uppercase text-accent flex items-center gap-2 mb-2"
+        >
+
+          <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+
+          SOFTWARE & DIGITAL LAB
+
+        </span>
+
+
+        <div class="flex justify-between items-end">
+
+          <div>
+
+            <h2 class="font-display text-5xl md:text-7xl tracking-tight uppercase">
+              My Apps
+            </h2>
+
+            <p class="text-white/60 text-sm mt-3 max-w-xl">
+              A collection of full-stack web applications, AI utilities, and interactive productivity tools engineered from scratch.
+            </p>
+
+          </div>
+
+
+          <button
+            onclick="addNewApp()"
+            class="admin-controls px-4 py-2 bg-accent/20 border border-accent text-accent rounded-full text-xs font-bold uppercase tracking-widest hover:bg-accent hover:text-black transition-all"
+          >
+            <i data-lucide="plus" class="w-3 h-3 inline mr-1"></i>
+            Add
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        id="appsGrid"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       LINKS
+       ===================================================== -->
+
+  <section
+    id="links"
+    class="px-6 md:px-12 py-24"
+  >
+
+    <div class="text-center mb-16">
+
+      <span class="text-[10px] font-semibold tracking-[0.3em] uppercase text-accent block mb-4">
+        Connect
+      </span>
+
+      <h2 class="font-display text-5xl md:text-7xl uppercase">
+        Digital Footprint
+      </h2>
+
+    </div>
+
+
+    <div class="max-w-[680px] mx-auto flex flex-col gap-3">
+
+      <a
+        href="mailto:luzukodlamini12@gmail.com"
+        data-social="email"
+        class="link-card flex items-center justify-between p-6 border border-accent bg-accent/10 rounded-3xl"
+      >
+
+        <div class="flex items-center gap-5">
+
+          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl">
+            <i data-lucide="mail"></i>
+          </div>
+
+          <div>
+
+            <div class="font-display text-2xl uppercase tracking-wider">
+              Email Me
+            </div>
+
+            <div class="text-sm text-white/60">
+              luzukodlamini12@gmail.com
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <span class="text-xs font-bold tracking-widest px-4 py-1.5 rounded-full bg-accent text-black">
+          Direct
+        </span>
+
+      </a>
+
+
+      <a
+        href="https://facebook.com/luzukodlamini"
+        target="_blank"
+        data-social="facebook"
+        class="link-card flex items-center justify-between p-6 border border-white/10 bg-white/5 rounded-3xl"
+      >
+
+        <div class="flex items-center gap-5">
+
+          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl">
+            <i data-lucide="facebook"></i>
+          </div>
+
+          <div>
+
+            <div class="font-display text-2xl uppercase tracking-wider">
+              Facebook
+            </div>
+
+            <div class="text-sm text-white/60">
+              Connect on Facebook
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <span class="text-xs font-bold tracking-widest px-4 py-1.5 rounded-full bg-white/10">
+          Social
+        </span>
+
+      </a>
+
+
+      <a
+        href="https://github.com/luzukodlamini"
+        target="_blank"
+        data-social="github"
+        class="link-card flex items-center justify-between p-6 border border-white/10 bg-white/5 rounded-3xl"
+      >
+
+        <div class="flex items-center gap-5">
+
+          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl">
+            <i data-lucide="github"></i>
+          </div>
+
+          <div>
+
+            <div class="font-display text-2xl uppercase tracking-wider">
+              GitHub
+            </div>
+
+            <div class="text-sm text-white/60">
+              Code & open source repositories
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <span class="text-xs font-bold tracking-widest px-4 py-1.5 rounded-full bg-white/10">
+          Dev
+        </span>
+
+      </a>
+
+
+      <a
+        href="https://linkedin.com/in/luzukodlamini"
+        target="_blank"
+        data-social="linkedin"
+        class="link-card flex items-center justify-between p-6 border border-white/10 bg-white/5 rounded-3xl"
+      >
+
+        <div class="flex items-center gap-5">
+
+          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl">
+            <i data-lucide="linkedin"></i>
+          </div>
+
+          <div>
+
+            <div class="font-display text-2xl uppercase tracking-wider">
+              LinkedIn
+            </div>
+
+            <div class="text-sm text-white/60">
+              Professional network & experience
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <span class="text-xs font-bold tracking-widest px-4 py-1.5 rounded-full bg-white/10">
+          Professional
+        </span>
+
+      </a>
+
+
+      <a
+        href="https://instagram.com/luzukodlamini"
+        target="_blank"
+        data-social="instagram"
+        class="link-card flex items-center justify-between p-6 border border-white/10 bg-white/5 rounded-3xl"
+      >
+
+        <div class="flex items-center gap-5">
+
+          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-xl">
+            <i data-lucide="instagram"></i>
+          </div>
+
+          <div>
+
+            <div class="font-display text-2xl uppercase tracking-wider">
+              Instagram
+            </div>
+
+            <div class="text-sm text-white/60">
+              Creative work & behind the scenes
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <span class="text-xs font-bold tracking-widest px-4 py-1.5 rounded-full bg-white/10">
+          Social
+        </span>
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer
+    class="px-6 md:px-12 py-16 border-t border-white/10 text-center"
+  >
+
+    <div class="text-[10px] font-semibold tracking-[0.2em] uppercase opacity-50">
+      © 2026 LUZUKO DLAMINI • PROUDLY SOUTH AFRICAN • JOHANNESBURG
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       ADMIN TOOLS
+       ===================================================== -->
+
+  <div
+    id="adminTools"
+    class="admin-controls fixed bottom-4 right-4 z-[190] gap-2 p-2 bg-[#121212]/95 border border-white/10 rounded-2xl backdrop-blur"
+  >
+
+    <button
+      onclick="exportBackup()"
+      class="px-3 py-2 rounded-xl bg-white/10 text-[9px] font-bold uppercase tracking-widest hover:bg-white/20"
+    >
+      Export
+    </button>
+
+
+    <label
+      class="px-3 py-2 rounded-xl bg-white/10 text-[9px] font-bold uppercase tracking-widest hover:bg-white/20 cursor-pointer"
+    >
+      Import
+
+      <input
+        type="file"
+        accept=".json"
+        class="hidden"
+        onchange="importBackup(this.files[0])"
+      />
+
+    </label>
+
+  </div>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script>
+
+    lucide.createIcons();
+
+
+    // =====================================================
+    // CONFIG
+    // =====================================================
+
+    const ADMIN_PASS = 'Luzuko2026!';
+
+    const STORE = {
+      work: 'ld_work_v2',
+      apps: 'ld_apps_v2',
+      profile: 'ld_profile_v2',
+      admin: 'ld_admin_v2'
+    };
+
+
+    // =====================================================
+    // DEFAULT WORK (UPDATED WITH YOUR CLOUDINARY IMAGES)
+    // =====================================================
+
+    const defaultWork = [
+
+      {
+        id: 'leaf-booth',
+        title: 'LEAF',
+        subtitle: 'Exhibition Booth Design',
+        year: '2026',
+        image: 'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555630/Untitled7.png',
+        gallery: [
+          'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555630/Untitled7.png',
+          'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555615/4vc.png'
+        ]
+      },
+
+      {
+        id: 'golden-cloud',
+        title: 'GOLDEN CLOUD',
+        subtitle: 'Exhibition Booth Design',
+        year: '2026',
+        image: 'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555640/Untitled4.png',
+        gallery: [
+          'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555640/Untitled4.png',
+          'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555624/luzuko2.png',
+          'https://res.cloudinary.com/gahyzuzl/image/upload/v1789555656/5vc.png'
+        ]
+      }
+
+    ];
+
+
+    // =====================================================
+    // DEFAULT APPS
+    // =====================================================
+
+    const defaultApps = [
+
+      {
+        id: 'kasiflow',
+        title: 'KasiFlow OS',
+        subtitle: 'Web App',
+        desc: 'Merchant POS & micro-logistics platform built for township businesses with offline sync.',
+        tags: [
+          'React',
+          'TypeScript',
+          'Tailwind'
+        ],
+        status: 'Live',
+        statusColor: 'emerald',
+        image: 'https://images.unsplash.com/photo-1556742049-0a67e5572293?w=800&q=80',
+        gallery: [
+          'https://images.unsplash.com/photo-1556742049-0a67e5572293?w=800&q=80'
+        ]
+      },
+
+      {
+        id: 'vibepulse',
+        title: 'VibePulse AI',
+        subtitle: 'AI & Tools',
+        desc: 'Reactive 3D sound visualizer and waveform synthesiser driven by real-time audio analysis.',
+        tags: [
+          'Web Audio',
+          'Canvas 2D',
+          'Gemini AI'
+        ],
+        status: 'Beta',
+        statusColor: 'accent',
+        image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80',
+        gallery: [
+          'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80'
+        ]
+      },
+
+      {
+        id: 'mzansi',
+        title: 'Mzansi Grid Pulse',
+        subtitle: 'Utility',
+        desc: 'Precision load-shedding stage tracker with battery runtime calculators and solar alerts.',
+        tags: [
+          'Next.js',
+          'WebSockets',
+          'GeoAPI'
+        ],
+        status: 'Live',
+        statusColor: 'emerald',
+        image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80',
+        gallery: [
+          'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80'
+        ]
+      }
+
+    ];
+
+
+    // =====================================================
+    // STATE
+    // =====================================================
+
+    let workData = read(
+      STORE.work,
+      defaultWork
+    );
+
+    let appsData = read(
+      STORE.apps,
+      defaultApps
+    );
+
+    let currentGalleryId = null;
+
+    let currentGalleryType = null;
+
+    let currentImageIndex = 0;
+
+
+    // =====================================================
+    // STORAGE
+    // =====================================================
+
+    function read(key, fallback) {
+
+      try {
+
+        const value = localStorage.getItem(key);
+
+        return value
+          ? JSON.parse(value)
+          : structuredClone(fallback);
+
+      } catch {
+
+        return structuredClone(fallback);
+
+      }
+
+    }
+
+
+    function save() {
+
+      try {
+
+        localStorage.setItem(
+          STORE.work,
+          JSON.stringify(workData)
+        );
+
+        localStorage.setItem(
+          STORE.apps,
+          JSON.stringify(appsData)
+        );
+
+        return true;
+
+      } catch (e) {
+
+        alert(
+          'Storage is full. Export a backup, then remove some large images.'
+        );
+
+        return false;
+
+      }
+
+    }
+
+
+    // =====================================================
+    // SECURITY HELPERS
+    // =====================================================
+
+    function esc(value) {
+
+      return String(value ?? '')
+        .replace(
+          /[&<>"']/g,
+          c => ({
+            '&':'&amp;',
+            '<':'&lt;',
+            '>':'&gt;',
+            '"':'&quot;',
+            "'":'&#039;'
+          }[c])
+        );
+
+    }
+
+
+    function slug(value) {
+
+      return value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g,'-')
+        .replace(/^-|-$/g,'')
+        + '-' +
+        Date.now();
+
+    }
+
+
+    function isAdmin() {
+
+      return document.body.classList.contains(
+        'is-admin'
+      );
+
+    }
+
+
+    // =====================================================
+    // WORK RENDER
+    // =====================================================
+
+    function renderWork() {
+
+      const grid =
+        document.getElementById('workGrid');
+
+      if (!grid) return;
+
+
+      grid.innerHTML =
+        workData.map(item => `
+
+          <div class="group relative">
+
+            <div
+              class="aspect-[16/13] overflow-hidden rounded-3xl relative cursor-pointer"
+              onclick="openGallery('${item.id}','work')"
+            >
+
+              <img
+                src="${esc(item.image)}"
+                alt="${esc(item.title)}"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale group-hover:grayscale-0"
+              />
+
+
+              <div
+                class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+              >
+
+                <span
+                  class="flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-white"
+                >
+
+                  <i
+                    data-lucide="images"
+                    class="w-5 h-5"
+                  ></i>
+
+                  View Gallery (${item.gallery.length})
+
+                </span>
+
+              </div>
+
+
+              <div
+                class="admin-controls absolute top-4 right-4 flex-col gap-2"
+              >
+
+                <button
+                  onclick="event.stopPropagation(); editItem('work','${item.id}')"
+                  class="p-2 bg-white text-black rounded-full hover:bg-accent transition-colors"
+                  title="Edit"
+                >
+                  <i data-lucide="pencil" class="w-4 h-4"></i>
+                </button>
+
+
+                <button
+                  onclick="event.stopPropagation(); openGallery('${item.id}','work')"
+                  class="p-2 bg-accent text-black rounded-full hover:bg-white transition-colors"
+                  title="Manage Images"
+                >
+                  <i data-lucide="settings" class="w-4 h-4"></i>
+                </button>
+
+
+                <button
+                  onclick="event.stopPropagation(); deleteItem('work','${item.id}')"
+                  class="p-2 bg-red-500/80 text-white rounded-full hover:bg-red-500 transition-colors"
+                  title="Delete"
+                >
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <div class="mt-6 flex justify-between">
+
+              <div>
+
+                <h3 class="text-3xl font-display uppercase tracking-wider">
+                  ${esc(item.title)}
+                </h3>
+
+                <p class="text-white/50 text-sm mt-1">
+                  ${esc(item.subtitle)}
+                </p>
+
+              </div>
+
+
+              <span class="text-white/40 self-end">
+                ${esc(item.year)}
+              </span>
+
+            </div>
+
+          </div>
+
+        `).join('');
+
+
+      updateCounts();
+
+      lucide.createIcons();
+
+    }
+
+
+    // =====================================================
+    // APP RENDER
+    // =====================================================
+
+    function renderApps() {
+
+      const grid =
+        document.getElementById('appsGrid');
+
+      if (!grid) return;
+
+
+      grid.innerHTML =
+        appsData.map(item => `
+
+          <div
+            class="border border-white/10 rounded-3xl overflow-hidden bg-[#121212] flex flex-col justify-between group hover:border-accent transition-all relative"
+          >
+
+            <div>
+
+              <div
+                class="aspect-[16/10] overflow-hidden relative cursor-pointer"
+                onclick="openGallery('${item.id}','app')"
+              >
+
+                <img
+                  src="${esc(item.image)}"
+                  alt="${esc(item.title)}"
+                  class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all"
+                />
+
+
+                <span
+                  class="absolute top-4 left-4 bg-black/80 text-${item.statusColor === 'emerald' ? 'emerald' : 'accent'}-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10"
+                >
+                  ${esc(item.status)}
+                </span>
+
+
+                <div
+                  class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                >
+
+                  <span
+                    class="flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-white"
+                  >
+
+                    <i data-lucide="images" class="w-5 h-5"></i>
+
+                    View Screenshots (${item.gallery.length})
+
+                  </span>
+
+                </div>
+
+
+                <div
+                  class="admin-controls absolute top-4 right-4 flex-col gap-2"
+                >
+
+                  <button
+                    onclick="event.stopPropagation(); editItem('app','${item.id}')"
+                    class="p-2 bg-white text-black rounded-full hover:bg-accent transition-colors"
+                    title="Edit"
+                  >
+                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                  </button>
+
+
+                  <button
+                    onclick="event.stopPropagation(); openGallery('${item.id}','app')"
+                    class="p-2 bg-accent text-black rounded-full hover:bg-white transition-colors"
+                    title="Manage Images"
+                  >
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                  </button>
+
+
+                  <button
+                    onclick="event.stopPropagation(); deleteItem('app','${item.id}')"
+                    class="p-2 bg-red-500/80 text-white rounded-full hover:bg-red-500 transition-colors"
+                    title="Delete"
+                  >
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <div class="p-6">
+
+                <span
+                  class="text-[10px] font-bold tracking-widest uppercase text-accent"
+                >
+                  ${esc(item.subtitle)}
+                </span>
+
+
+                <h3
+                  class="text-2xl font-display uppercase tracking-wider text-white mt-1"
+                >
+                  ${esc(item.title)}
+                </h3>
+
+
+                <p
+                  class="text-xs text-white/50 mt-2 leading-relaxed"
+                >
+                  ${esc(item.desc)}
+                </p>
+
+
+                <div class="flex flex-wrap gap-1.5 mt-4">
+
+                  ${(item.tags || [])
+                    .map(tag => `
+                      <span
+                        class="px-2 py-0.5 bg-white/5 rounded text-[10px] font-mono text-white/60"
+                      >
+                        ${esc(tag)}
+                      </span>
+                    `)
+                    .join('')}
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="p-6 pt-0">
+
+              <a
+                href="#apps"
+                class="w-full py-3 bg-white text-black font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-accent transition-all flex items-center justify-center gap-2"
+              >
+
+                Launch App
+
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+
+              </a>
+
+            </div>
+
+          </div>
+
+        `).join('');
+
+
+      updateCounts();
+
+      lucide.createIcons();
+
+    }
+
+
+    // =====================================================
+    // COUNTS
+    // =====================================================
+
+    function updateCounts() {
+
+      const count =
+        document.querySelector(
+          '#work .opacity-40'
+        );
+
+      if (count) {
+
+        count.textContent =
+          `${String(workData.length).padStart(2,'0')} PROJECTS`;
+
+      }
+
+    }
+
+
+    // =====================================================
+    // ADMIN
+    // =====================================================
+
+    function openAdminModal() {
+
+      if (isAdmin()) {
+
+        document.body.classList.remove(
+          'is-admin'
+        );
+
+        localStorage.removeItem(
+          STORE.admin
+        );
+
+        showToast(
+          'Admin mode disabled'
+        );
+
+        return;
+
+      }
+
+
+      document
+        .getElementById('adminModal')
+        .classList.remove('hidden');
+
+      document
+        .getElementById('adminModal')
+        .classList.add('flex');
+
+      document
+        .getElementById('adminPassword')
+        .focus();
+
+    }
+
+
+    function closeAdminModal() {
+
+      document
+        .getElementById('adminModal')
+        .classList.add('hidden');
+
+      document
+        .getElementById('adminModal')
+        .classList.remove('flex');
+
+      document
+        .getElementById('adminError')
+        .classList.add('hidden');
+
+      document
+        .getElementById('adminPassword')
+        .value = '';
+
+    }
+
+
+    function checkAdminPassword() {
+
+      if (
+        document.getElementById('adminPassword').value ===
+        ADMIN_PASS
+      ) {
+
+        document.body.classList.add(
+          'is-admin'
+        );
+
+        localStorage.setItem(
+          STORE.admin,
+          'true'
+        );
+
+        closeAdminModal();
+
+        showToast(
+          'Admin mode enabled'
+        );
+
+        lucide.createIcons();
+
+      } else {
+
+        document
+          .getElementById('adminError')
+          .classList.remove('hidden');
+
+      }
+
+    }
+
+
+    // =====================================================
+    // TOAST
+    // =====================================================
+
+    function showToast(message) {
+
+      let toast =
+        document.getElementById('toast');
+
+
+      if (!toast) {
+
+        toast =
+          document.createElement('div');
+
+        toast.id = 'toast';
+
+        toast.className =
+          'fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] px-5 py-3 bg-white text-black rounded-full text-xs font-bold uppercase tracking-widest shadow-2xl';
+
+        document.body.appendChild(toast);
+
+      }
+
+
+      toast.textContent = message;
+
+      toast.classList.remove(
+        'hidden'
+      );
+
+
+      clearTimeout(
+        window.__toast
+      );
+
+
+      window.__toast =
+        setTimeout(
+          () => toast.classList.add('hidden'),
+          2200
+        );
+
+    }
+
+
+    // =====================================================
+    // GALLERY
+    // =====================================================
+
+    function openGallery(id,type) {
+
+      currentGalleryId = id;
+
+      currentGalleryType = type;
+
+      currentImageIndex = 0;
+
+
+      const item =
+        type === 'work'
+          ? workData.find(x => x.id === id)
+          : appsData.find(x => x.id === id);
+
+
+      if (!item) return;
+
+
+      document
+        .getElementById('galleryTitle')
+        .textContent =
+        item.title + ' Angles';
+
+
+      document
+        .getElementById('galleryModal')
+        .classList.remove('hidden');
+
+
+      document
+        .getElementById('galleryModal')
+        .classList.add('flex');
+
+
+      document.body.style.overflow =
+        'hidden';
+
+
+      renderGalleryThumbnails(item);
+
+    }
+
+
+    function closeGallery() {
+
+      document
+        .getElementById('galleryModal')
+        .classList.add('hidden');
+
+      document
+        .getElementById('galleryModal')
+        .classList.remove('flex');
+
+      document.body.style.overflow = '';
+
+      currentGalleryId = null;
+
+    }
+
+
+    function renderGalleryThumbnails(item) {
+
+      const container =
+        document.getElementById(
+          'galleryThumbnails'
+        );
+
+
+      container.innerHTML = '';
+
+
+      item.gallery.forEach(
+        (img,index) => {
+
+          const div =
+            document.createElement('div');
+
+
+          div.className =
+            'relative group/thumb aspect-square rounded-xl overflow-hidden border-2 cursor-pointer transition-all ' +
+            (
+              index === currentImageIndex
+                ? 'border-accent'
+                : 'border-transparent hover:border-accent'
+            );
+
+
+          div.innerHTML = `
+
+            <img
+              src="${esc(img)}"
+              class="w-full h-full object-cover"
+              onclick="setGalleryImage(${index})"
+            >
+
+
+            <button
+              onclick="event.stopPropagation();removeImage(${index})"
+              class="admin-controls absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover/thumb:opacity-100 transition-opacity"
+            >
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+
+
+            ${
+              index === 0
+                ? `
+                  <span
+                    class="absolute bottom-1 left-1 px-2 py-0.5 bg-black/80 rounded text-[8px] uppercase font-bold"
+                  >
+                    Cover
+                  </span>
+                `
+                : ''
+            }
+
+          `;
+
+
+          container.appendChild(div);
+
+        }
+      );
+
+
+      document
+        .getElementById('galleryMainImage')
+        .src =
+        item.gallery[currentImageIndex] ||
+        item.image;
+
+
+      lucide.createIcons();
+
+    }
+
+
+    function setGalleryImage(index) {
+
+      const item =
+        currentGalleryType === 'work'
+          ? workData.find(x => x.id === currentGalleryId)
+          : appsData.find(x => x.id === currentGalleryId);
+
+
+      if (!item) return;
+
+
+      currentImageIndex =
+        Math.max(
+          0,
+          Math.min(
+            index,
+            item.gallery.length - 1
+          )
+        );
+
+
+      document
+        .getElementById('galleryMainImage')
+        .src =
+        item.gallery[currentImageIndex];
+
+
+      renderGalleryThumbnails(item);
+
+    }
+
+
+    function galleryNext() {
+
+      const item =
+        currentGalleryType === 'work'
+          ? workData.find(x => x.id === currentGalleryId)
+          : appsData.find(x => x.id === currentGalleryId);
+
+
+      if (!item || !item.gallery.length)
+        return;
+
+
+      setGalleryImage(
+        (currentImageIndex + 1) %
+        item.gallery.length
+      );
+
+    }
+
+
+    function galleryPrevious() {
+
+      const item =
+        currentGalleryType === 'work'
+          ? workData.find(x => x.id === currentGalleryId)
+          : appsData.find(x => x.id === currentGalleryId);
+
+
+      if (!item || !item.gallery.length)
+        return;
+
+
+      setGalleryImage(
+        (
+          currentImageIndex -
+          1 +
+          item.gallery.length
+        ) %
+        item.gallery.length
+      );
+
+    }
+
+
+    // =====================================================
+    // IMAGE REMOVAL
+    // =====================================================
+
+    function removeImage(index) {
+
+      if (!isAdmin()) return;
+
+
+      const item =
+        currentGalleryType === 'work'
+          ? workData.find(x => x.id === currentGalleryId)
+          : appsData.find(x => x.id === currentGalleryId);
+
+
+      if (!item) return;
+
+
+      if (item.gallery.length <= 1) {
+
+        showToast(
+          'Keep at least one image'
+        );
+
+        return;
+
+      }
+
+
+      item.gallery.splice(
+        index,
+        1
+      );
+
+
+      if (index === 0) {
+
+        item.image =
+          item.gallery[0];
+
+      }
+
+
+      currentImageIndex =
+        Math.max(
+          0,
+          Math.min(
+            currentImageIndex,
+            item.gallery.length - 1
+          )
+        );
+
+
+      save();
+
+      renderGalleryThumbnails(item);
+
+      renderWork();
+
+      renderApps();
+
+    }
+
+
+    // =====================================================
+    // CLEAR GALLERY
+    // =====================================================
+
+    function clearGallery() {
+
+      if (!isAdmin()) return;
+
+
+      const item =
+        currentGalleryType === 'work'
+          ? workData.find(x => x.id === currentGalleryId)
+          : appsData.find(x => x.id === currentGalleryId);
+
+
+      if (!item) return;
+
+
+      if (
+        !confirm(
+          'Clear all gallery images except the cover?'
+        )
+      ) return;
+
+
+      item.gallery = [
+        item.image
+      ];
+
+
+      currentImageIndex = 0;
+
+
+      save();
+
+      renderGalleryThumbnails(item);
+
+      renderWork();
+
+      renderApps();
+
+    }
+
+
+    // =====================================================
+    // IMAGE UPLOAD
+    // =====================================================
+
+    function addImages(files) {
+
+      if (
+        !isAdmin() ||
+        !currentGalleryId
+      ) return;
+
+
+      const item =
+        currentGalleryType === 'work'
+          ? workData.find(x => x.id === currentGalleryId)
+          : appsData.find(x => x.id === currentGalleryId);
+
+
+      if (!item) return;
+
+
+      [...files].forEach(file => {
+
+        if (
+          !file.type.startsWith('image/')
+        ) return;
+
+
+        if (
+          file.size > 12 * 1024 * 1024
+        ) {
+
+          showToast(
+            file.name +
+            ' is over 12MB'
+          );
+
+          return;
+
+        }
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload = event => {
+
+          const img =
+            new Image();
+
+
+          img.onload = () => {
+
+            const maxWidth =
+              1600;
+
+            let width =
+              img.width;
+
+            let height =
+              img.height;
+
+
+            if (
+              width > maxWidth
+            ) {
+
+              height =
+                Math.round(
+                  height *
+                  maxWidth /
+                  width
+                );
+
+              width =
+                maxWidth;
+
+            }
+
+
+            const canvas =
+              document.createElement(
+                'canvas'
+              );
+
+
+            canvas.width =
+              width;
+
+            canvas.height =
+              height;
+
+
+            const context =
+              canvas.getContext(
+                '2d'
+              );
+
+
+            context.drawImage(
+              img,
+              0,
+              0,
+              width,
+              height
+            );
+
+
+            const data =
+              canvas.toDataURL(
+                file.type === 'image/png'
+                  ? 'image/png'
+                  : 'image/jpeg',
+                0.88
+              );
+
+
+            item.gallery.push(
+              data
+            );
+
+
+            if (
+              item.gallery.length === 1
+            ) {
+
+              item.image =
+                data;
+
+            }
+
+
+            save();
+
+            renderGalleryThumbnails(
+              item
+            );
+
+            renderWork();
+
+            renderApps();
+
+            showToast(
+              'Image added'
+            );
+
+          };
+
+
+          img.src =
+            event.target.result;
+
+        };
+
+
+        reader.readAsDataURL(
+          file
+        );
+
+      });
+
+    }
+
+
+    // =====================================================
+    // DELETE ITEM
+    // =====================================================
+
+    function deleteItem(type,id) {
+
+      if (!isAdmin()) return;
+
+
+      if (
+        !confirm(
+          'Delete this item permanently from this browser?'
+        )
+      ) return;
+
+
+      if (type === 'work') {
+
+        workData =
+          workData.filter(
+            x => x.id !== id
+          );
+
+      } else {
+
+        appsData =
+          appsData.filter(
+            x => x.id !== id
+          );
+
+      }
+
+
+      save();
+
+      renderWork();
+
+      renderApps();
+
+      showToast(
+        'Deleted'
+      );
+
+    }
+
+
+    // =====================================================
+    // ADD PROJECT
+    // =====================================================
+
+    function addNewProject() {
+
+      if (!isAdmin()) return;
+
+
+      const title =
+        prompt(
+          'Project Title:'
+        );
+
+
+      if (!title) return;
+
+
+      const subtitle =
+        prompt(
+          'Subtitle:'
+        ) || 'Project';
+
+
+      const year =
+        prompt(
+          'Year:'
+        ) ||
+        String(
+          new Date().getFullYear()
+        );
+
+
+      const id =
+        slug(title);
+
+
+      const image =
+        `https://picsum.photos/seed/${id}/800/600`;
+
+
+      workData.push({
+
+        id,
+
+        title:
+          title.toUpperCase(),
+
+        subtitle,
+
+        year,
+
+        image,
+
+        gallery: [
+          image
+        ]
+
+      });
+
+
+      save();
+
+      renderWork();
+
+      showToast(
+        'Project added — open it to upload images'
+      );
+
+    }
+
+
+    // =====================================================
+    // ADD APP
+    // =====================================================
+
+    function addNewApp() {
+
+      if (!isAdmin()) return;
+
+
+      const title =
+        prompt(
+          'App Title:'
+        );
+
+
+      if (!title) return;
+
+
+      const subtitle =
+        prompt(
+          'Category:'
+        ) || 'App';
+
+
+      const desc =
+        prompt(
+          'Description:'
+        ) ||
+        'A new application.';
+
+
+      const tags =
+        (
+          prompt(
+            'Tags (comma separated):'
+          ) ||
+          'New'
+        )
+        .split(',')
+        .map(
+          x => x.trim()
+        )
+        .filter(Boolean);
+
+
+      const status =
+        prompt(
+          'Status (Live/Beta):'
+        ) || 'Beta';
+
+
+      const id =
+        slug(title);
+
+
+      const image =
+        `https://picsum.photos/seed/${id}/800/600`;
+
+
+      appsData.push({
+
+        id,
+
+        title,
+
+        subtitle,
+
+        desc,
+
+        tags,
+
+        status,
+
+        statusColor:
+          status.toLowerCase() === 'live'
+            ? 'emerald'
+            : 'accent',
+
+        image,
+
+        gallery: [
+          image
+        ]
+
+      });
+
+
+      save();
+
+      renderApps();
+
+      showToast(
+        'App added — open it to upload screenshots'
+      );
+
+    }
+
+
+    // =====================================================
+    // EDIT
+    // =====================================================
+
+    function editItem(type,id) {
+
+      if (!isAdmin()) return;
+
+
+      const item =
+        type === 'work'
+          ? workData.find(x => x.id === id)
+          : appsData.find(x => x.id === id);
+
+
+      if (!item) return;
+
+
+      item.title =
+        prompt(
+          'Title:',
+          item.title
+        ) ||
+        item.title;
+
+
+      item.subtitle =
+        prompt(
+          'Subtitle / Category:',
+          item.subtitle
+        ) ||
+        item.subtitle;
+
+
+      if (type === 'work') {
+
+        item.year =
+          prompt(
+            'Year:',
+            item.year
+          ) ||
+          item.year;
+
+      } else {
+
+        item.desc =
+          prompt(
+            'Description:',
+            item.desc
+          ) ||
+          item.desc;
+
+
+        const tags =
+          prompt(
+            'Tags (comma separated):',
+            (item.tags || []).join(', ')
+          );
+
+
+        if (tags !== null) {
+
+          item.tags =
+            tags
+              .split(',')
+              .map(
+                x => x.trim()
+              )
+              .filter(Boolean);
+
+        }
+
+
+        const status =
+          prompt(
+            'Status:',
+            item.status
+          ) ||
+          item.status;
+
+
+        item.status =
+          status;
+
+
+        item.statusColor =
+          status.toLowerCase() === 'live'
+            ? 'emerald'
+            : 'accent';
+
+      }
+
+
+      save();
+
+      renderWork();
+
+      renderApps();
+
+      showToast(
+        'Updated'
+      );
+
+    }
+
+
+    // =====================================================
+    // BACKUP EXPORT
+    // =====================================================
+
+    function exportBackup() {
+
+      const payload = {
+
+        version: 2,
+
+        exportedAt:
+          new Date().toISOString(),
+
+        work:
+          workData,
+
+        apps:
+          appsData,
+
+        profile:
+          localStorage.getItem(
+            STORE.profile
+          ) || null
+
+      };
+
+
+      const blob =
+        new Blob(
+          [
+            JSON.stringify(
+              payload
+            )
+          ],
+          {
+            type:
+              'application/json'
+          }
+        );
+
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+
+      const a =
+        document.createElement(
+          'a'
+        );
+
+
+      a.href =
+        url;
+
+      a.download =
+        'luzuko-portfolio-backup.json';
+
+      a.click();
+
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    }
+
+
+    // =====================================================
+    // BACKUP IMPORT
+    // =====================================================
+
+    function importBackup(file) {
+
+      if (!isAdmin()) return;
+
+
+      if (!file) return;
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload = () => {
+
+        try {
+
+          const data =
+            JSON.parse(
+              reader.result
+            );
+
+
+          if (
+            !Array.isArray(
+              data.work
+            ) ||
+            !Array.isArray(
+              data.apps
+            )
+          ) {
+
+            throw new Error();
+
+          }
+
+
+          workData =
+            data.work;
+
+
+          appsData =
+            data.apps;
+
+
+          if (data.profile) {
+
+            localStorage.setItem(
+              STORE.profile,
+              data.profile
+            );
+
+          }
+
+
+          save();
+
+          renderWork();
+
+          renderApps();
+
+          showToast(
+            'Backup restored'
+          );
+
+        } catch {
+
+          showToast(
+            'Invalid backup file'
+          );
+
+        }
+
+      };
+
+
+      reader.readAsText(
+        file
+      );
+
+    }
+
+
+    // =====================================================
+    // CV
+    // =====================================================
+
+    function openCvModal() {
+
+      document
+        .getElementById('cvModal')
+        .classList.remove(
+          'hidden'
+        );
+
+      document.body.style.overflow =
+        'hidden';
+
+    }
+
+
+    function closeCvModal() {
+
+      document
+        .getElementById('cvModal')
+        .classList.add(
+          'hidden'
+        );
+
+      document.body.style.overflow =
+        '';
+
+    }
+
+
+    // =====================================================
+    // UPLOAD LISTENER
+    // =====================================================
+
+    document
+      .getElementById(
+        'galleryUploadInput'
+      )
+      ?.addEventListener(
+        'change',
+        event => {
+
+          addImages(
+            event.target.files
+          );
+
+          event.target.value =
+            '';
+
+        }
+      );
+
+
+    // =====================================================
+    // KEYBOARD CONTROLS
+    // =====================================================
+
+    document.addEventListener(
+      'keydown',
+      event => {
+
+        if (
+          event.key === 'Escape'
+        ) {
+
+          closeGallery();
+
+          closeCvModal();
+
+          closeAdminModal();
+
+        }
+
+
+        const modal =
+          document.getElementById(
+            'galleryModal'
+          );
+
+
+        if (
+          modal &&
+          !modal.classList.contains(
+            'hidden'
+          )
+        ) {
+
+          if (
+            event.key === 'ArrowRight'
+          ) {
+
+            galleryNext();
+
+          }
+
+
+          if (
+            event.key === 'ArrowLeft'
+          ) {
+
+            galleryPrevious();
+
+          }
+
+        }
+
+      }
+    );
+
+
+    // =====================================================
+    // RESTORE ADMIN SESSION
+    // =====================================================
+
+    if (
+      localStorage.getItem(
+        STORE.admin
+      ) === 'true'
+    ) {
+
+      document.body.classList.add(
+        'is-admin'
+      );
+
+    }
+
+
+    // =====================================================
+    // INITIAL RENDER
+    // =====================================================
+
+    renderWork();
+
+    renderApps();
+
+    lucide.createIcons();
+
+  </script>
+
+</body>
+</html>
